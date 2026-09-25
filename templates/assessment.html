@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Clinical Wellness Surveys & Self-Assessment - Serene Minds{% endblock %}
+
+{% block content %}
+<div style="max-width: 860px; margin: 0 auto 50px;">
+  <!-- Header -->
+  <div style="margin-bottom: 28px;">
+    <a href="{{ url_for('student_dashboard') }}" style="color: var(--primary); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+      ← Back to Wellness Dashboard
+    </a>
+    <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-main);">Clinical Self-Assessment Surveys</h1>
+    <p style="color: var(--text-muted); font-size: 1rem; margin-top: 6px;">
+      Standardized psychological screening tools. Over the last 2 weeks, how often have you been bothered by any of the following problems?
+    </p>
+  </div>
+
+  <!-- Survey Selector Tabs -->
+  <div class="card" style="margin-bottom: 24px; padding: 18px 24px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+      <label class="form-label" style="margin: 0; font-size: 1rem;">Select Clinical Survey Instrument:</label>
+      <select id="assessment-type-select" class="form-select" style="max-width: 320px;" onchange="changeAssessmentType(this.value)">
+        <option value="GAD-7" selected>GAD-7 Anxiety Screening (7 Items)</option>
+        <option value="PSS Stress Scale">Perceived Stress Scale (PSS-10)</option>
+        <option value="Burnout Index">Academic Burnout Inventory (6 Items)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Assessment Questionnaire Form -->
+  <div class="card" style="padding: 30px;">
+    <form id="assessment-form">
+      <!-- Container for dynamic questions -->
+      <div id="questions-container">
+        <!-- Rendered GAD-7 questions by default -->
+        <div class="question-block" data-qid="q1">
+          <div class="question-text">1. Feeling nervous, anxious, or on edge</div>
+          <div class="options-row">
+            <div class="option-choice" data-value="0">Not at all (0)</div>
+            <div class="option-choice" data-value="1">Several days (1)</div>
+            <div class="option-choice" data-value="2">More than half (2)</div>
+            <div class="option-choice" data-value="3">Nearly every day (3)</div>
+          </div>
+        </div>
+
+        <div class="question-block" data-qid="q2">
+          <div class="question-text">2. Not being able to stop or control worrying</div>
+          <div class="options-row">
+            <div class="option-choice" data-value="0">Not at all (0)</div>
+            <div class="option-choice" data-value="1">Several days (1)</div>
+            <div class="option-choice" data-value="2">More than half (2)</div>
+            <div class="option-choice" data-value="3">Nearly every day (3)</div>
+          </div>
+        </div>
+
+        <div class="question-block" data-qid="q3">
+          <div class="question-text">3. Worrying too much about different things</div>
+          <div class="options-row">
+            <div class="option-choice" data-value="0">Not at all (0)</div>
+            <div class="option-choice" data-value="1">Several days (1)</div>
+            <div class="option-choice" data-value="2">More than half (2)</div>
+            <div class="option-choice" data-value="3">Nearly every day (3)</div>
+          </div>
+        </div>
+
+        <div class="question-block" data-qid="q4">
+          <div class="question-text">4. Trouble relaxing or feeling unable to unwind</div>
+          <div class="options-row">
+            <div class="option-choice" data-value="0">Not at all (0)</div>
+            <div class="option-choice" data-value="1">Several days (1)</div>
+            <div class="option-choice" data-value="2">More than half (2)</div>
+            <div class="option-choice" data-value="3">Nearly every day (3)</div>
+          </div>
+        </div>
+
+        <div class="question-block" data-qid="q5">
+          <div class="question-text">5. Being so restless that it's hard to sit still</div>
+          <div class="options-row">
+            <div class="option-choice" data-value="0">Not at all (0)</div>
+            <div class="option-choice" data-value="1">Several days (1)</div>
+            <div class="option-choice" data-value="2">More than half (2)</div>
+            <div class="option-choice" data-value="3">Nearly every day (3)</div>
+          </div>
+        </div>
+
+        <div class="question-block" data-qid="q6">
+          <div class="question-text">6. Becoming easily annoyed, irritable, or short-tempered</div>
+          <div class="options-row">
+            <div class="option-choice" data-value="0">Not at all (0)</div>
+            <div class="option-choice" data-value="1">Several days (1)</div>
+            <div class="option-choice" data-value="2">More than half (2)</div>
+            <div class="option-choice" data-value="3">Nearly every day (3)</div>
+          </div>
+        </div>
+
+        <div class="question-block" data-qid="q7">
+          <div class="question-text">7. Feeling afraid, as if something awful might happen</div>
+          <div class="options-row">
+            <div class="option-choice" data-value="0">Not at all (0)</div>
+            <div class="option-choice" data-value="1">Several days (1)</div>
+            <div class="option-choice" data-value="2">More than half (2)</div>
+            <div class="option-choice" data-value="3">Nearly every day (3)</div>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 14px;">
+        Submit & View Clinical Analysis
+      </button>
+    </form>
+  </div>
+
+  <!-- Immediate Clinical Results Card (Hidden until submitted) -->
+  <div class="card" id="assessment-result-card" style="display: none; margin-top: 28px; border-left: 6px solid var(--primary); padding: 30px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+      <h2 style="font-size: 1.35rem; font-weight: 800;">Assessment Evaluation & Clinical Feedback</h2>
+      <span id="result-risk-badge" class="badge"></span>
+    </div>
+
+    <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px;">
+      <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary);" id="result-score-display">--</div>
+      <div style="color: var(--text-muted); font-size: 0.95rem;">Total Calculated Diagnostic Score</div>
+    </div>
+
+    <div style="background-color: var(--surface-alt); padding: 18px; border-radius: var(--radius-sm); margin-bottom: 20px;">
+      <h4 style="font-size: 0.95rem; margin-bottom: 6px; font-weight: 700;">Clinical Recommendation:</h4>
+      <p id="result-recommendations" style="color: var(--text-main); font-size: 0.92rem; line-height: 1.6;"></p>
+    </div>
+
+    <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+      <a href="{{ url_for('student_dashboard') }}#appointments-tab" class="btn btn-primary">
+        Schedule Session with Counselor
+      </a>
+      <a href="{{ url_for('wellness_hub') }}" class="btn btn-outline">
+        Open Relaxation & Mindfulness Hub
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/student.js') }}"></script>
+<script>
+  // Dynamic question replacement for PSS & Burnout
+  const surveys = {
+    'GAD-7': [
+      "1. Feeling nervous, anxious, or on edge",
+      "2. Not being able to stop or control worrying",
+      "3. Worrying too much about different things",
+      "4. Trouble relaxing or feeling unable to unwind",
+      "5. Being so restless that it's hard to sit still",
+      "6. Becoming easily annoyed, irritable, or short-tempered",
+      "7. Feeling afraid, as if something awful might happen"
+    ],
+    'PSS Stress Scale': [
+      "1. In the last month, how often have you been upset because of something that happened unexpectedly?",
+      "2. How often have you felt that you were unable to control important things in your life?",
+      "3. How often have you felt nervous and 'stressed'?",
+      "4. How often have you felt confident about your ability to handle your personal academic problems?",
+      "5. How often have you felt that things were going your way?",
+      "6. How often have you found that you could not cope with all the things you had to do?",
+      "7. How often have you been able to control irritations in your daily routine?",
+      "8. How often have you felt difficulties were piling up so high that you could not overcome them?"
+    ],
+    'Burnout Index': [
+      "1. I feel emotionally drained by my coursework and academic commitments.",
+      "2. I feel used up at the end of a typical study day.",
+      "3. I feel fatigued when I get up in the morning and have to face another lecture or exam.",
+      "4. I have become more cynical or doubtful about the value of my studies.",
+      "5. In my opinion, I am struggling to achieve effective progress in my courses.",
+      "6. I feel overwhelmed trying to balance study demands with basic rest."
+    ]
+  };
+
+  function changeAssessmentType(type) {
+    const container = document.getElementById('questions-container');
+    const questions = surveys[type] || surveys['GAD-7'];
+    const maxVal = type === 'PSS Stress Scale' ? 4 : 3;
+
+    container.innerHTML = questions.map((q, idx) => `
+      <div class="question-block" data-qid="q${idx + 1}">
+        <div class="question-text">${q}</div>
+        <div class="options-row">
+          <div class="option-choice" data-value="0">Never / Not at all (0)</div>
+          <div class="option-choice" data-value="1">Several days / Seldom (1)</div>
+          <div class="option-choice" data-value="2">More than half / Often (2)</div>
+          <div class="option-choice" data-value="${maxVal}">Nearly every day / Always (${maxVal})</div>
+        </div>
+      </div>
+    `).join('');
+
+    // Reattach listeners to newly rendered option choices
+    initAssessmentModule();
+    document.getElementById('assessment-result-card').style.display = 'none';
+  }
+</script>
+{% endblock %}

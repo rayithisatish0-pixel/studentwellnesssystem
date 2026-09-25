@@ -1,0 +1,335 @@
+/* ===============================================================
+   Serene Minds - Student Wellness System
+   Interactive Components: Mood Selector, Breathing Circle, Soundscapes, Modals
+   =============================================================== */
+
+/* --- Interactive Mood Selector --- */
+.mood-selector {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 16px 0 24px;
+}
+
+.mood-btn {
+  flex: 1;
+  background-color: var(--surface-alt);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 14px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+  outline: none;
+}
+
+.mood-btn .mood-emoji {
+  font-size: 2.2rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.mood-btn .mood-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.mood-btn:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary-tint);
+  background-color: #fff;
+}
+
+.mood-btn:hover .mood-emoji {
+  transform: scale(1.15);
+}
+
+.mood-btn.selected {
+  border-color: var(--primary);
+  background-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.2);
+}
+
+.mood-btn.selected .mood-text {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* Specific highlight colors for mood options */
+.mood-btn[data-score="1"].selected { border-color: #ef4444; background: #fef2f2; }
+.mood-btn[data-score="1"].selected .mood-text { color: #dc2626; }
+
+.mood-btn[data-score="2"].selected { border-color: #f97316; background: #fff7ed; }
+.mood-btn[data-score="2"].selected .mood-text { color: #ea580c; }
+
+.mood-btn[data-score="3"].selected { border-color: #eab308; background: #fefce8; }
+.mood-btn[data-score="3"].selected .mood-text { color: #ca8a04; }
+
+.mood-btn[data-score="4"].selected { border-color: #3b82f6; background: #eff6ff; }
+.mood-btn[data-score="4"].selected .mood-text { color: #2563eb; }
+
+.mood-btn[data-score="5"].selected { border-color: #10b981; background: #ecfdf5; }
+.mood-btn[data-score="5"].selected .mood-text { color: #059669; }
+
+/* Emotion Tags Pills */
+.tags-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tag-pill {
+  padding: 6px 14px;
+  background-color: var(--surface-alt);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  user-select: none;
+}
+
+.tag-pill:hover {
+  border-color: var(--primary);
+  color: var(--text-main);
+}
+
+.tag-pill.active {
+  background-color: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* Stress Slider Display */
+.range-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.range-slider {
+  flex: 1;
+  accent-color: var(--primary);
+  cursor: pointer;
+  height: 8px;
+}
+
+.range-value-pill {
+  min-width: 44px;
+  text-align: center;
+  padding: 4px 10px;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+}
+
+/* --- 4-7-8 Breathing Guide --- */
+.breathing-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 20px;
+  text-align: center;
+}
+
+.breath-circle-wrap {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.breath-circle-outer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px dashed var(--primary-tint);
+  opacity: 0.6;
+}
+
+.breath-circle {
+  width: 130px;
+  height: 130px;
+  background: linear-gradient(135deg, rgba(74, 124, 89, 0.85), rgba(59, 130, 246, 0.85));
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(74, 124, 89, 0.3);
+  transition: transform 1s ease-in-out;
+}
+
+.breath-phase-text {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.breath-timer-count {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.breath-instruction {
+  font-size: 1.05rem;
+  color: var(--text-main);
+  font-weight: 600;
+  margin-bottom: 8px;
+  min-height: 28px;
+}
+
+.breath-subtext {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  max-width: 440px;
+  margin-bottom: 20px;
+}
+
+/* Soundscape Ambient Generator */
+.soundscape-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.soundscape-card {
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-alt);
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.sound-icon {
+  font-size: 2rem;
+}
+
+.sound-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* --- Assessment Questionnaire Elements --- */
+.question-block {
+  padding: 18px;
+  background-color: var(--surface-alt);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+}
+
+.question-text {
+  font-weight: 600;
+  font-size: 0.98rem;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.options-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.option-choice {
+  border: 1px solid var(--border-light);
+  background-color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.option-choice:hover {
+  border-color: var(--primary);
+  color: var(--text-main);
+}
+
+.option-choice.selected {
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* --- Modal Dialog --- */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-backdrop.active {
+  display: flex;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-window {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background-color: var(--surface-alt);
+}

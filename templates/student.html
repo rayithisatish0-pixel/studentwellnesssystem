@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Wellness Portal - Serene Minds</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/animations.css">
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Crisis Banner -->
+  <div class="crisis-top-banner">
+    <span>🚨 <strong>Need Immediate Support?</strong> Crisis Lifeline: Dial <strong>988</strong> | Text <strong>HOME</strong> to <strong>741741</strong> (24/7 Free & Confidential)</span>
+  </div>
+
+  <!-- Header -->
+  <header class="header-nav">
+    <div class="container nav-inner">
+      <a href="/student" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"></path>
+            <circle cx="12" cy="12" r="2"></circle>
+          </svg>
+        </div>
+        <span>Serene Minds <span style="font-size:0.8rem; font-weight:600; background:var(--primary-subtle); color:var(--primary); padding:0.2rem 0.6rem; border-radius:12px; margin-left:0.5rem;">Student Portal</span></span>
+      </a>
+
+      <div class="nav-actions">
+        <span style="font-size: 0.9rem; color: var(--text-secondary); margin-right: 0.5rem;">
+          Welcome, <strong>{{ user.full_name }}</strong>
+        </span>
+        <button class="btn btn-outline btn-sm" onclick="handleLogout()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Shell Layout -->
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-user-card">
+        <div class="user-name">{{ user.full_name }}</div>
+        <div class="user-role-badge">🎓 {{ user.department or 'Student' }}</div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem;">
+          ID: {{ user.student_id or 'SM-STUDENT' }} • {{ user.year_of_study or 'Year 1' }}
+        </div>
+      </div>
+
+      <ul class="sidebar-menu">
+        <li>
+          <button class="sidebar-menu-btn active" data-tab="tab-overview">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            Overview & Telemetry
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-menu-btn" data-tab="tab-mood-tracker">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+            Daily Mood Tracker
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-menu-btn" data-tab="tab-assessments">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            Clinical Self-Assessments
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-menu-btn" data-tab="tab-wellness-hub">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M10 15l5-3-5-3v6z"></path></svg>
+            Personalized Wellness Hub
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-menu-btn" data-tab="tab-appointments">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            Appointments & Support
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-menu-btn" data-tab="tab-goals">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            Wellness Habits & Goals
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-menu-btn" data-tab="tab-feedback">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            Student Feedback
+          </button>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+
+      <!-- ======================================================== -->
+      <!-- TAB 1: OVERVIEW & TELEMETRY                              -->
+      <!-- ======================================================== -->
+      <section id="tab-overview" class="tab-pane active">
+        <div style="margin-bottom: 2rem;">
+          <h2>Good day, {{ user.full_name.split(' ')[0] }} 🌿</h2>
+          <p>Here is your personal emotional wellness overview and campus health telemetry.</p>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background:#E8F5E9; color:var(--primary);">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path></svg>
+            </div>
+            <div class="stat-info">
+              <div id="metricAvgMood" class="stat-value">Loading...</div>
+              <div class="stat-label">14-Day Average Mood</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background:#EFF6FF; color:#1D4ED8;">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </div>
+            <div class="stat-info">
+              <div id="metricAvgSleep" class="stat-value">Loading...</div>
+              <div class="stat-label">Average Sleep Duration</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background:#FEF3C7; color:#B45309;">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+            </div>
+            <div class="stat-info">
+              <div id="metricRiskStatus" class="stat-value" style="font-size:1.25rem;">Checking...</div>
+              <div class="stat-label">Latest Assessment Status</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrap" style="background:#F3E8FF; color:#7E22CE;">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+            </div>
+            <div class="stat-info">
+              <div id="metricApptStatus" class="stat-value" style="font-size:1.15rem;">None</div>
+              <div class="stat-label">Upcoming Consultation</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Mood Trend Chart -->
+        <div class="card" style="margin-bottom: 2rem;">
+          <div class="card-header">
+            <h3 class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              My Mood Trend (Recent Logs)
+            </h3>
+            <button class="btn btn-sm btn-outline" onclick="switchToAppointments('routine')">
+              Request Counselor Check-in
+            </button>
+          </div>
+          <div style="height: 300px; position: relative;">
+            <canvas id="studentMoodChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Quick Wellness Actions -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+          <div class="card" style="background: linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 100%);">
+            <h4>Daily Mood Check-in</h4>
+            <p style="margin: 0.5rem 0 1.25rem; font-size: 0.92rem;">Take 30 seconds to log how you feel, your sleep, and any academic stressors today.</p>
+            <button class="btn btn-primary btn-sm" onclick="document.querySelector('.sidebar-menu-btn[data-tab=\'tab-mood-tracker\']').click()">
+              Log Today's Mood &rarr;
+            </button>
+          </div>
+
+          <div class="card" style="background: linear-gradient(135deg, #EFF6FF 0%, #FFFFFF 100%);">
+            <h4>Self-Assessments</h4>
+            <p style="margin: 0.5rem 0 1.25rem; font-size: 0.92rem;">Evaluate your stress, anxiety (GAD-7), or study burnout with automatic clinical feedback.</p>
+            <button class="btn btn-secondary btn-sm" onclick="document.querySelector('.sidebar-menu-btn[data-tab=\'tab-assessments\']').click()">
+              Take Assessment &rarr;
+            </button>
+          </div>
+
+          <div class="card" style="background: linear-gradient(135deg, #FDF4FF 0%, #FFFFFF 100%);">
+            <h4>Mindful Breathwork</h4>
+            <p style="margin: 0.5rem 0 1.25rem; font-size: 0.92rem;">Reset your nervous system with interactive Box Breathing and ambient soothing soundscapes.</p>
+            <button class="btn btn-outline btn-sm" onclick="switchToWellnessHub()">
+              Open Wellness Hub &rarr;
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 2: INTERACTIVE DAILY MOOD TRACKER                    -->
+      <!-- ======================================================== -->
+      <section id="tab-mood-tracker" class="tab-pane">
+        <div style="margin-bottom: 2rem;">
+          <h2>Daily Mood & Wellness Check-In</h2>
+          <p>Every check-in is securely logged to the database to track your emotional trends and personal growth.</p>
+        </div>
+
+        <div class="card" style="margin-bottom: 2.5rem;">
+          <form id="moodEntryForm" onsubmit="handleMoodSubmit(event)">
+            <input type="hidden" id="moodScoreInput" value="3">
+            <input type="hidden" id="moodLabelInput" value="Neutral / Okay">
+
+            <!-- Mood Emoji Selection Grid -->
+            <label class="form-label" style="font-size: 1.05rem;">How are you feeling overall today?</label>
+            <div class="mood-selector">
+              <div class="mood-option" data-score="1" data-label="Distressed / Low">
+                <span class="emoji-icon">😞</span>
+                <span class="mood-name">Distressed</span>
+                <small style="color:var(--text-muted); font-size:0.75rem;">Score: 1</small>
+              </div>
+
+              <div class="mood-option" data-score="2" data-label="Anxious / Stressed">
+                <span class="emoji-icon">😟</span>
+                <span class="mood-name">Anxious</span>
+                <small style="color:var(--text-muted); font-size:0.75rem;">Score: 2</small>
+              </div>
+
+              <div class="mood-option selected" data-score="3" data-label="Neutral / Okay">
+                <span class="emoji-icon">😐</span>
+                <span class="mood-name">Okay</span>
+                <small style="color:var(--text-muted); font-size:0.75rem;">Score: 3</small>
+              </div>
+
+              <div class="mood-option" data-score="4" data-label="Calm / Focused">
+                <span class="emoji-icon">😊</span>
+                <span class="mood-name">Calm</span>
+                <small style="color:var(--text-muted); font-size:0.75rem;">Score: 4</small>
+              </div>
+
+              <div class="mood-option" data-score="5" data-label="Joyful / Energetic">
+                <span class="emoji-icon">😄</span>
+                <span class="mood-name">Joyful</span>
+                <small style="color:var(--text-muted); font-size:0.75rem;">Score: 5</small>
+              </div>
+            </div>
+
+            <!-- Emotional Tags -->
+            <div class="form-group" style="margin-top: 1.5rem;">
+              <label class="form-label">What factors or feelings are active today? (Select all that apply)</label>
+              <div class="tag-container">
+                <span class="tag-pill">Academic Pressure</span>
+                <span class="tag-pill">Exam Dread</span>
+                <span class="tag-pill">Sleep Deprived</span>
+                <span class="tag-pill">Project Deadlines</span>
+                <span class="tag-pill">Good Workout</span>
+                <span class="tag-pill">Socializing</span>
+                <span class="tag-pill">Family Matters</span>
+                <span class="tag-pill">Feeling Optimistic</span>
+                <span class="tag-pill">Overwhelmed</span>
+                <span class="tag-pill">Deep Focus</span>
+              </div>
+            </div>
+
+            <!-- Sliders for Sleep & Energy -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+              <div>
+                <label class="form-label">Last Night's Sleep (Hours)</label>
+                <div class="range-slider-wrapper">
+                  <input type="range" id="sleepSlider" class="range-slider" min="0" max="14" step="0.5" value="7.0">
+                  <span id="sleepVal" class="range-value">7.0 hrs</span>
+                </div>
+              </div>
+
+              <div>
+                <label class="form-label">Physical Energy Level (1-5)</label>
+                <div class="range-slider-wrapper">
+                  <input type="range" id="energySlider" class="range-slider" min="1" max="5" step="1" value="3">
+                  <span id="energyVal" class="range-value">3 / 5</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Private Journal Notes -->
+            <div class="form-group">
+              <label class="form-label" for="moodJournalNote">Personal Reflection / Journal Note (Optional & Private)</label>
+              <textarea id="moodJournalNote" class="form-textarea" placeholder="How was your day? Any academic wins, worries, or gratitude you want to capture?"></textarea>
+            </div>
+
+            <button type="submit" id="saveMoodBtn" class="btn btn-primary btn-lg">
+              Save Daily Mood Entry
+            </button>
+          </form>
+        </div>
+
+        <!-- History Table of Previous Logs -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">My Mood History & Journal Logs</h3>
+            <span style="font-size:0.85rem; color:var(--text-muted);">Real-time database records</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Logged Date & Time</th>
+                  <th>Mood & Score</th>
+                  <th>Associated Factors</th>
+                  <th>Sleep & Energy</th>
+                  <th>Reflective Journal</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="moodLogsTableBody">
+                <tr><td colspan="6" style="text-align:center; padding: 2rem;">Loading logs from database...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 3: CLINICAL SELF-ASSESSMENTS                         -->
+      <!-- ======================================================== -->
+      <section id="tab-assessments" class="tab-pane">
+        <div style="margin-bottom: 2rem;">
+          <h2>Standardized Clinical Self-Assessments</h2>
+          <p>Complete clinically validated questionnaires to understand your emotional symptoms and access evidence-based support.</p>
+        </div>
+
+        <!-- Survey Type Nav Tabs -->
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+          <button class="btn btn-outline survey-nav-btn active" data-type="PHQ-9">
+            PHQ-9 Depression Screener
+          </button>
+          <button class="btn btn-outline survey-nav-btn" data-type="GAD-7">
+            GAD-7 Anxiety Screener
+          </button>
+          <button class="btn btn-outline survey-nav-btn" data-type="ABSI">
+            Academic Burnout Scale (ABSI)
+          </button>
+        </div>
+
+        <!-- Live Result Banner (populated upon submission) -->
+        <div id="surveyResultBanner" style="display: none;"></div>
+
+        <!-- Question Form Card -->
+        <div class="card" style="margin-bottom: 2.5rem;">
+          <h3 id="surveyTitle" style="color: var(--primary);">Assessment Title</h3>
+          <p id="surveyDescription" style="margin: 0.4rem 0 1.5rem; color: var(--text-secondary);"></p>
+
+          <form id="clinicalSurveyForm" onsubmit="handleSurveySubmit(event)">
+            <div id="surveyQuestionsContainer">
+              <!-- Dynamically populated questions -->
+            </div>
+
+            <button type="submit" id="submitSurveyBtn" class="btn btn-primary btn-lg" style="margin-top: 1rem;">
+              Submit Assessment & Analyze Score
+            </button>
+          </form>
+        </div>
+
+        <!-- Historical Survey Results Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">My Assessment History</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Completed Date</th>
+                  <th>Assessment Screener</th>
+                  <th>Total Score</th>
+                  <th>Clinical Risk Level</th>
+                  <th>Algorithmic Clinical Guidance</th>
+                </tr>
+              </thead>
+              <tbody id="assessmentHistoryTableBody">
+                <tr><td colspan="5" style="text-align:center; padding: 2rem;">Loading assessments...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 4: PERSONALIZED WELLNESS HUB                         -->
+      <!-- ======================================================== -->
+      <section id="tab-wellness-hub" class="tab-pane">
+        <div style="margin-bottom: 2rem;">
+          <h2>Personalized Wellness Hub</h2>
+          <p>Interactive mindfulness exercises, offline ambient audio, and evidence-based self-care tools.</p>
+        </div>
+
+        <!-- Guided Breathwork Card -->
+        <div class="card breathing-card" style="margin-bottom: 2rem;">
+          <span class="badge badge-low" style="margin-bottom: 0.5rem;">Nervous System Regulation</span>
+          <h3>Guided Mindful Breathing</h3>
+          <p style="max-width: 540px; margin-top: 0.25rem;">
+            Follow the expanding and contracting orb to slow your heart rate and trigger your parasympathetic relaxation response.
+          </p>
+
+          <div style="margin: 1.25rem 0; display: flex; align-items: center; gap: 0.75rem;">
+            <label style="font-weight: 600; font-size: 0.9rem;" for="breathingModeSelect">Technique:</label>
+            <select id="breathingModeSelect" class="form-select" style="width: auto;" onchange="resetBreathing()">
+              <option value="box">Box Breathing (4-4-4-4 Focus & Calm)</option>
+              <option value="relax">4-7-8 Deep Relaxation (Sleep & Panic Relief)</option>
+            </select>
+          </div>
+
+          <div class="breathing-orb-wrapper">
+            <div id="breathingOrb" class="breathing-orb"></div>
+            <div id="breathingInstruction" class="breathing-instruction">Ready</div>
+          </div>
+
+          <div style="display: flex; gap: 1rem;">
+            <button id="startBreathingBtn" class="btn btn-primary" onclick="toggleBreathing()">
+              Begin Mindful Breathwork
+            </button>
+            <button class="btn btn-outline" onclick="resetBreathing()">
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Ambient Sound Generator (Web Audio API) -->
+        <div class="card" style="margin-bottom: 2rem;">
+          <div class="card-header">
+            <h3 class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+              Ambient Focus & Calm Soundscapes
+            </h3>
+            <span style="font-size:0.85rem; color:var(--primary); font-weight:600;">100% Native Web Audio (Offline Ready)</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+            <!-- Sound 1: Gentle Rain -->
+            <div style="background:var(--bg-app); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.25rem; text-align:center;">
+              <span style="font-size: 2rem;">🌧️</span>
+              <h4 style="margin: 0.5rem 0 0.25rem;">Gentle Rain</h4>
+              <p style="font-size: 0.85rem; margin-bottom: 1rem;">Pink noise tuned to steady raindrops on leaves.</p>
+              <button id="soundBtn_rain" class="btn btn-sm btn-outline btn-block soundscape-card-btn" onclick="toggleSoundscape('rain')">
+                ▶ Play
+              </button>
+            </div>
+
+            <!-- Sound 2: Ocean Waves -->
+            <div style="background:var(--bg-app); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.25rem; text-align:center;">
+              <span style="font-size: 2rem;">🌊</span>
+              <h4 style="margin: 0.5rem 0 0.25rem;">Ocean Waves</h4>
+              <p style="font-size: 0.85rem; margin-bottom: 1rem;">Rhythmic swells calibrated to human breathing pace.</p>
+              <button id="soundBtn_ocean" class="btn btn-sm btn-outline btn-block soundscape-card-btn" onclick="toggleSoundscape('ocean')">
+                ▶ Play
+              </button>
+            </div>
+
+            <!-- Sound 3: Deep White Noise -->
+            <div style="background:var(--bg-app); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.25rem; text-align:center;">
+              <span style="font-size: 2rem;">🍃</span>
+              <h4 style="margin: 0.5rem 0 0.25rem;">Forest Whisper</h4>
+              <p style="font-size: 0.85rem; margin-bottom: 1rem;">Filtered broad frequencies to mask study noise.</p>
+              <button id="soundBtn_forest" class="btn btn-sm btn-outline btn-block soundscape-card-btn" onclick="toggleSoundscape('forest')">
+                ▶ Play
+              </button>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 1rem; max-width: 400px; margin: 0 auto;">
+            <span style="font-size: 0.88rem; font-weight: 600;">Volume:</span>
+            <input type="range" min="0" max="100" value="50" class="range-slider" oninput="handleAmbientVolume(this.value)">
+          </div>
+        </div>
+
+        <!-- Evidence-Based Self Care Protocols -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+          <div class="card">
+            <h4>🧠 The 5-4-3-2-1 Grounding Method</h4>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+              When acute panic or exam anxiety strikes, anchor yourself in the present moment:
+            </p>
+            <ul style="font-size: 0.88rem; margin: 0.75rem 0 0 1.25rem; color: var(--text-secondary);">
+              <li><strong>5 things</strong> you can see around you</li>
+              <li><strong>4 things</strong> you can physically feel or touch</li>
+              <li><strong>3 things</strong> you can clearly hear</li>
+              <li><strong>2 things</strong> you can smell</li>
+              <li><strong>1 thing</strong> you can taste or positive self-affirmation</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h4>💤 Sleep Architecture for Students</h4>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+              Maintain cognitive retention during midterms and project crunches:
+            </p>
+            <ul style="font-size: 0.88rem; margin: 0.75rem 0 0 1.25rem; color: var(--text-secondary);">
+              <li>Keep a consistent sleep schedule within a 45-minute window</li>
+              <li>No caffeine within 7 hours of desired bedtime</li>
+              <li>Dim blue screen lights 60 minutes before resting</li>
+              <li>Expose your eyes to morning natural sunlight within 30 min of waking</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 5: APPOINTMENTS & HELP REQUEST                       -->
+      <!-- ======================================================== -->
+      <section id="tab-appointments" class="tab-pane">
+        <div style="margin-bottom: 2rem;">
+          <h2>Counselor Appointments & Help Request</h2>
+          <p>Book confidential 1-on-1 consultations with university counselors. In urgent cases, requests are prioritized immediately.</p>
+        </div>
+
+        <!-- Booking Form Card -->
+        <div class="card" style="margin-bottom: 2.5rem;">
+          <h3 style="margin-bottom: 1.25rem;">Schedule a Consultation Session</h3>
+
+          <form id="appointmentForm" onsubmit="handleAppointmentSubmit(event)">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
+              <div class="form-group">
+                <label class="form-label" for="apptDate">Preferred Date</label>
+                <input type="date" id="apptDate" class="form-input" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="apptTimeSlot">Preferred Time Window</label>
+                <select id="apptTimeSlot" class="form-select" required>
+                  <option value="09:00 AM - 10:00 AM">09:00 AM - 10:00 AM</option>
+                  <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+                  <option value="11:00 AM - 12:00 PM">11:00 AM - 12:00 PM</option>
+                  <option value="02:00 PM - 03:00 PM">02:00 PM - 03:00 PM</option>
+                  <option value="03:00 PM - 04:00 PM">03:00 PM - 04:00 PM</option>
+                  <option value="04:00 PM - 05:00 PM">04:00 PM - 05:00 PM</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="apptUrgency">Urgency Classification</label>
+                <select id="apptUrgency" class="form-select" required>
+                  <option value="routine">Routine Check-In / Academic Guidance</option>
+                  <option value="urgent">Urgent (Heightened Stress / Panic / Insomnia)</option>
+                  <option value="crisis">Crisis (Immediate Emotional Support)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="apptReason">Primary Topic / Reason</label>
+                <select id="apptReason" class="form-select" required>
+                  <option value="Academic Pressure & Burnout">Academic Pressure & Burnout</option>
+                  <option value="Anxiety & Panic Symptoms">Anxiety & Panic Symptoms</option>
+                  <option value="Depression & Low Motivation">Depression & Low Motivation</option>
+                  <option value="Personal / Grief / Family">Personal / Grief / Family</option>
+                  <option value="Relationship & Social Isolation">Relationship & Social Isolation</option>
+                  <option value="General Wellness & Coping Skills">General Wellness & Coping Skills</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="apptNotes">Confidential Notes for Counselor (Optional)</label>
+              <textarea id="apptNotes" class="form-textarea" placeholder="Share any specific challenges, symptoms, or course deadlines you wish to discuss with the counselor..."></textarea>
+            </div>
+
+            <button type="submit" id="submitApptBtn" class="btn btn-primary btn-lg">
+              Request Consultation Session
+            </button>
+          </form>
+        </div>
+
+        <!-- Appointment Queue Status Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">My Appointments & Status Tracking</h3>
+            <span style="font-size:0.85rem; color:var(--text-muted);">Real-time database updates</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Requested Date & Slot</th>
+                  <th>Topic & Urgency</th>
+                  <th>Current Status</th>
+                  <th>Meeting Location / Room</th>
+                  <th>Counselor Feedback / Notes</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="myAppointmentsTableBody">
+                <tr><td colspan="6" style="text-align:center; padding: 2rem;">Loading appointments...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 6: WELLNESS HABITS & GOALS                           -->
+      <!-- ======================================================== -->
+      <section id="tab-goals" class="tab-pane">
+        <div style="margin-bottom: 2rem;">
+          <h2>Wellness Habits & Daily Goals</h2>
+          <p>Small, consistent self-care routines protect cognitive endurance throughout the academic term.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+          <div>
+            <div id="goalsListContainer">
+              <!-- Dynamically populated goals -->
+            </div>
+          </div>
+
+          <div class="card" style="height: fit-content;">
+            <h3>Create a New Wellness Goal</h3>
+            <p style="margin: 0.25rem 0 1.25rem; font-size: 0.9rem;">Set a manageable 7 or 14 day wellness commitment.</p>
+
+            <form id="newGoalForm" onsubmit="handleNewGoalSubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="newGoalTitle">Goal Name</label>
+                <input type="text" id="newGoalTitle" class="form-input" placeholder="e.g., 20-min campus walk after lectures" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="newGoalCategory">Category</label>
+                <select id="newGoalCategory" class="form-select">
+                  <option value="Mindfulness">Mindfulness & Breathwork</option>
+                  <option value="Sleep">Sleep Hygiene</option>
+                  <option value="Physical">Physical Activity / Movement</option>
+                  <option value="Study Balance">Study-Life Balance</option>
+                  <option value="Hydration">Hydration & Nutrition</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="newGoalTargetDays">Target Duration (Days)</label>
+                <input type="number" id="newGoalTargetDays" class="form-input" min="3" max="30" value="7" required>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block">
+                Add Wellness Goal
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 7: STUDENT FEEDBACK                                  -->
+      <!-- ======================================================== -->
+      <section id="tab-feedback" class="tab-pane">
+        <div style="margin-bottom: 2rem;">
+          <h2>Student Wellness Feedback</h2>
+          <p>Help us improve campus counseling services and digital wellness tools.</p>
+        </div>
+
+        <div class="card" style="max-width: 650px;">
+          <form id="studentFeedbackForm" onsubmit="handleFeedbackSubmit(event)">
+            <div class="form-group">
+              <label class="form-label" for="feedbackType">Feedback Area</label>
+              <select id="feedbackType" class="form-select">
+                <option value="Wellness Hub & Tools">Wellness Hub & Tools</option>
+                <option value="Counseling Services">Counseling Services & Appointments</option>
+                <option value="Daily Mood Tracker">Daily Mood Tracker Experience</option>
+                <option value="Overall Campus Support">Overall Campus Support</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="feedbackRating">Overall Rating (1 to 5 Stars)</label>
+              <select id="feedbackRating" class="form-select">
+                <option value="5">★★★★★ (5 - Excellent)</option>
+                <option value="4">★★★★☆ (4 - Good)</option>
+                <option value="3">★★★☆☆ (3 - Average)</option>
+                <option value="2">★★☆☆☆ (2 - Needs Improvement)</option>
+                <option value="1">★☆☆☆☆ (1 - Poor)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="feedbackMessage">Your Comments or Suggestions</label>
+              <textarea id="feedbackMessage" class="form-textarea" placeholder="What has been helpful? What additional mental health resources would you like to see?" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg">
+              Submit Anonymous / Identified Feedback
+            </button>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/audio-synth.js"></script>
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/student.js"></script>
+</body>
+</html>

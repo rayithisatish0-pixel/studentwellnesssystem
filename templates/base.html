@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Serene Minds - Student Wellness System{% endblock %}</title>
+  
+  <!-- Calming System Fonts & Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <!-- 24/7 Crisis Helpline Banner -->
+  <div class="emergency-banner">
+    <span>🌿 <strong>Immediate Support Needed?</strong> 24/7 Crisis Lifeline: Call/Text <strong>988</strong> | Campus Urgent Care: <strong>(800) 273-TALK</strong></span>
+    <a href="#emergency-modal" onclick="openEmergencyInfo(event)">View All Helplines</a>
+  </div>
+
+  <!-- Primary Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="{{ url_for('index') }}" class="brand">
+        <div class="brand-icon">🌱</div>
+        <div>
+          <span>Serene Minds</span>
+          <span class="brand-tagline">Student Wellness System</span>
+        </div>
+      </a>
+
+      <button class="mobile-toggle" aria-label="Toggle navigation menu" onclick="toggleNav()">
+        ☰
+      </button>
+
+      <nav>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          {% if session.get('user_id') and session.get('role') == 'student' %}
+            <li><a href="{{ url_for('student_dashboard') }}">My Dashboard</a></li>
+            <li><a href="{{ url_for('assessment_page') }}">Wellness Surveys</a></li>
+            <li><a href="{{ url_for('wellness_hub') }}">Mindfulness Hub</a></li>
+          {% elif session.get('user_id') and session.get('role') == 'counselor' %}
+            <li><a href="{{ url_for('counselor_dashboard') }}">Counselor Dashboard</a></li>
+          {% endif %}
+          
+          {% if session.get('user_id') %}
+            <li>
+              <button onclick="logoutUser()" class="btn btn-sm btn-outline" style="border-radius:var(--radius-full);">
+                Sign Out
+              </button>
+            </li>
+          {% else %}
+            <li><a href="{{ url_for('login') }}" class="btn btn-sm btn-outline-primary">Student Sign In</a></li>
+            <li><a href="{{ url_for('counselor_login') }}" class="btn btn-sm btn-primary">Counselor Portal</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Block -->
+  <main class="main-wrapper">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div>
+        <p><strong>Serene Minds</strong> — Dedicated to Supporting Holistic Student Well-Being</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">
+          Confidential, empathetic, and evidence-based mental health monitoring.
+        </p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="{{ url_for('index') }}">About Serene Minds</a></li>
+        <li><a href="{{ url_for('counselor_login') }}">Staff & Counselor Access</a></li>
+        <li><a href="javascript:void(0)" onclick="openEmergencyInfo()">Emergency Resources</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Emergency Contacts Modal -->
+  <div class="modal-backdrop" id="emergency-modal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="card-title">🚨 Confidential Support & Emergency Helplines</h3>
+        <button class="btn btn-sm btn-outline" onclick="closeEmergencyInfo()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:16px;color:var(--text-muted);">
+          If you or someone you know is in crisis or experiencing unbearable distress, please reach out to any of these free, 24/7 confidential resources:
+        </p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="background:var(--surface-alt);padding:14px;border-radius:var(--radius-sm);border-left:4px solid var(--status-danger);">
+            <strong>National Suicide & Crisis Lifeline</strong>
+            <p style="color:var(--text-muted);font-size:0.9rem;">Call or Text <strong>988</strong> (Available 24 hours every day, English & Spanish)</p>
+          </div>
+          <div style="background:var(--surface-alt);padding:14px;border-radius:var(--radius-sm);border-left:4px solid var(--secondary);">
+            <strong>Crisis Text Line</strong>
+            <p style="color:var(--text-muted);font-size:0.9rem;">Text <strong>HOME</strong> to <strong>741741</strong> to connect with a volunteer crisis counselor</p>
+          </div>
+          <div style="background:var(--surface-alt);padding:14px;border-radius:var(--radius-sm);border-left:4px solid var(--primary);">
+            <strong>Campus Wellness Center Urgent Walk-In</strong>
+            <p style="color:var(--text-muted);font-size:0.9rem;">Pavilion Building 4, Suite 102 | Direct Line: <strong>(555) 019-4822</strong></p>
+          </div>
+          <div style="background:var(--surface-alt);padding:14px;border-radius:var(--radius-sm);border-left:4px solid var(--accent-warm);">
+            <strong>The Trevor Project (LGBTQ+ Crisis Line)</strong>
+            <p style="color:var(--text-muted);font-size:0.9rem;">Call <strong>1-866-488-7386</strong> or text <strong>START</strong> to <strong>678-678</strong></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeEmergencyInfo()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared JavaScript Utilities -->
+  <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+  <script>
+    function toggleNav() {
+      const nav = document.getElementById('nav-links');
+      if (nav) nav.classList.toggle('active');
+    }
+    function openEmergencyInfo(e) {
+      if (e) e.preventDefault();
+      document.getElementById('emergency-modal').classList.add('active');
+    }
+    function closeEmergencyInfo() {
+      document.getElementById('emergency-modal').classList.remove('active');
+    }
+  </script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

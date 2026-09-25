@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}Counselor Clinical Portal & Analytics - Serene Minds{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+  <div>
+    <div class="badge badge-success" style="margin-bottom: 8px;">
+      🛡️ Campus Mental Health Clinical Team
+    </div>
+    <h1 class="welcome-title">Counselor Analytics & Risk Detection Portal</h1>
+    <p class="welcome-subtitle">
+      Logged in as: <strong>{{ user.email }}</strong> • Real-time clinical queue and student early risk detection
+    </p>
+  </div>
+
+  <div style="display: flex; gap: 10px;">
+    <button onclick="initCounselorDashboard()" class="btn btn-outline-primary btn-sm">
+      🔄 Refresh Real-Time Data
+    </button>
+  </div>
+</div>
+
+<!-- 1. KPI Stats Grid -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon blue">👥</div>
+    <div>
+      <div class="stat-val" id="counselor-stat-students">0</div>
+      <div class="stat-label">Active Monitored Students</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon red">⚠️</div>
+    <div>
+      <div class="stat-val" id="counselor-stat-flagged" style="color: var(--status-danger);">0</div>
+      <div class="stat-label">Flagged High-Risk Students</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon amber">⏳</div>
+    <div>
+      <div class="stat-val" id="counselor-stat-pending-apps">0</div>
+      <div class="stat-label">Pending Appointment Queue</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon green">📈</div>
+    <div>
+      <div class="stat-val" id="counselor-stat-total-logs">0</div>
+      <div class="stat-label">Total Check-Ins Submitted</div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Early Detection Risk Alerts Center -->
+<div class="card" style="margin-bottom: 28px; border-left: 6px solid var(--status-danger);">
+  <div class="card-header">
+    <div>
+      <h2 class="card-title">🚨 Early Risk Detection Alerts</h2>
+      <p class="card-subtitle">
+        Students automatically flagged by persistent low moods (avg &lt; 2.3/5), severe survey scores (GAD-7 &ge; 15, Burnout), or acute sleep deficits.
+      </p>
+    </div>
+    <span class="badge badge-danger">High Priority</span>
+  </div>
+
+  <div id="risk-alerts-container">
+    <div style="text-align: center; padding: 24px; color: var(--text-muted);">
+      Scanning campus wellness records for risk indicators...
+    </div>
+  </div>
+</div>
+
+<!-- 3. Campus Wellness Visualizations (Chart.js) -->
+<div class="grid-2col" style="margin-bottom: 28px;">
+  <!-- Doughnut: Campus Distribution -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">📊 Campus Wellness Distribution</h2>
+      <span style="font-size: 0.82rem; color: var(--text-muted);">Current Cohort</span>
+    </div>
+    <div class="chart-container">
+      <canvas id="campusDistributionChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Line: 7-Day Trend -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">📈 7-Day Campus Mood Trajectory</h2>
+      <span style="font-size: 0.82rem; color: var(--text-muted);">Average Cohort Mood</span>
+    </div>
+    <div class="chart-container">
+      <canvas id="campusMoodTrendChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Appointment Queue Management -->
+<div class="card">
+  <div class="card-header" style="flex-wrap: wrap; gap: 14px;">
+    <div>
+      <h2 class="card-title">📋 Student Appointment & Consultation Queue</h2>
+      <p class="card-subtitle">Manage intake requests, confirm meeting times, and document confidential consultation notes.</p>
+    </div>
+
+    <!-- Filters -->
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <select id="queue-filter-status" class="form-select" style="width: auto; padding: 6px 12px; font-size: 0.88rem;">
+        <option value="All">All Statuses</option>
+        <option value="Pending" selected>Pending Review</option>
+        <option value="Confirmed">Confirmed</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+
+      <select id="queue-filter-urgency" class="form-select" style="width: auto; padding: 6px 12px; font-size: 0.88rem;">
+        <option value="All">All Urgencies</option>
+        <option value="Immediate Support">Immediate Support</option>
+        <option value="Priority">Priority</option>
+        <option value="Standard">Standard</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Student Information</th>
+          <th>Requested Time Slot</th>
+          <th>Primary Concern</th>
+          <th>Urgency</th>
+          <th>Status</th>
+          <th>Meeting Room / Location</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="counselor-appointments-tbody">
+        <tr>
+          <td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">
+            Loading appointment queue...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal 1: Manage & Edit Appointment -->
+<div class="modal-backdrop" id="appointment-modal">
+  <div class="modal-window">
+    <div class="modal-header">
+      <h3 class="card-title">Manage Appointment & Consultation Notes</h3>
+      <button class="btn btn-sm btn-outline" id="close-modal-btn">&times;</button>
+    </div>
+    <form id="edit-appointment-form">
+      <div class="modal-body">
+        <input type="hidden" id="modal-app-id">
+
+        <div class="form-group">
+          <label class="form-label" for="modal-app-status">Update Appointment Status</label>
+          <select id="modal-app-status" class="form-select" required>
+            <option value="Pending">Pending Review</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modal-meeting-details">Meeting Location or Telehealth Room</label>
+          <input type="text" id="modal-meeting-details" class="form-input" placeholder="e.g. Room 304, Campus Wellness Pavilion or Secure Telehealth URL">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modal-counselor-notes">Confidential Counselor Consultation Notes</label>
+          <textarea id="modal-counselor-notes" class="form-textarea" placeholder="Document clinical impressions, coping recommendations, or follow-up milestones..."></textarea>
+          <div class="form-hint">These notes will be securely attached to the student appointment record in the database.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="cancel-modal-btn">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Updates to Database</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal 2: Student Longitudinal Wellness Timeline -->
+<div class="modal-backdrop" id="student-timeline-modal">
+  <div class="modal-window" style="max-width: 720px;">
+    <div class="modal-header">
+      <h3 class="card-title">Student Longitudinal Wellness Timeline</h3>
+      <button class="btn btn-sm btn-outline" id="close-timeline-modal-btn">&times;</button>
+    </div>
+    <div class="modal-body" id="timeline-modal-content">
+      <!-- Dynamic timeline loaded via API -->
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/counselor.js') }}"></script>
+{% endblock %}

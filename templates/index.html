@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Serene Minds - Student Mental Health & Wellness Monitoring System{% endblock %}
+
+{% block content %}
+<div style="padding: 30px 0 50px;">
+  <!-- Hero Section -->
+  <div style="text-align: center; max-width: 820px; margin: 0 auto 50px;">
+    <div class="badge badge-success" style="font-size: 0.9rem; padding: 6px 16px; margin-bottom: 18px;">
+      Empathetic • Confidential • Evidence-Based
+    </div>
+    <h1 style="font-size: 2.8rem; font-weight: 800; color: var(--text-main); line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 18px;">
+      Nurturing Student Well-Being Across Academic Life
+    </h1>
+    <p style="font-size: 1.15rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 30px;">
+      Serene Minds is an integrated wellness ecosystem empowering students with daily emotional tracking, clinically validated self-assessments, personalized mindfulness tools, and direct, stigma-free counseling connections.
+    </p>
+    
+    <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+      <a href="{{ url_for('login') }}" class="btn btn-lg btn-primary">
+        Student Wellness Portal →
+      </a>
+      <a href="{{ url_for('counselor_login') }}" class="btn btn-lg btn-outline">
+        Counselor & Staff Access
+      </a>
+    </div>
+  </div>
+
+  <!-- Key Pillars Grid -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 50px;">
+    <!-- Pillar 1 -->
+    <div class="card">
+      <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 16px;">
+        📊
+      </div>
+      <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px;">Interactive Daily Mood Tracking</h3>
+      <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+        Check in with your emotions, sleep duration, and study stress levels. Observe your personal mental wellness trends over 7-day and 30-day timelines.
+      </p>
+    </div>
+
+    <!-- Pillar 2 -->
+    <div class="card">
+      <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--secondary-light); color: var(--secondary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 16px;">
+        📝
+      </div>
+      <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px;">Clinical Self-Assessments</h3>
+      <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+        Complete validated scales including GAD-7 Anxiety, Perceived Stress Scale, and Academic Burnout Indices with real-time scoring and tailored guidance.
+      </p>
+    </div>
+
+    <!-- Pillar 3 -->
+    <div class="card">
+      <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--accent-warm-light); color: var(--accent-warm); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 16px;">
+        🌿
+      </div>
+      <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px;">Personalized Wellness Hub</h3>
+      <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+        Access real-time recommendations, interactive 4-7-8 deep breathing exercises, calming ambient soundscapes, and evidence-based study habit rituals.
+      </p>
+    </div>
+
+    <!-- Pillar 4 -->
+    <div class="card">
+      <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--status-info-bg); color: var(--status-info); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 16px;">
+        🤝
+      </div>
+      <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px;">Counselor Care Coordination</h3>
+      <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+        Easily request private appointments with campus counselors. Staff monitor early risk indicators to provide timely, confidential interventions.
+      </p>
+    </div>
+  </div>
+
+  <!-- Empathy & Privacy Assurance Section -->
+  <div class="card" style="background: linear-gradient(135deg, #ffffff, var(--surface-alt)); border-color: var(--primary-tint); padding: 36px;">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px;">
+      <div style="max-width: 680px;">
+        <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 12px; color: var(--primary);">
+          Your Privacy & Emotional Safety are Paramount
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.98rem; line-height: 1.6;">
+          Serene Minds complies with educational privacy standards and strict counseling ethics. All journal notes and survey data are securely managed. Counselors use aggregate trends and proactive risk indicators solely to offer compassionate support when you need it most.
+        </p>
+      </div>
+      <div>
+        <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Get Started Free</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block title %}Student Wellness Dashboard - Serene Minds{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+  <div>
+    <h1 class="welcome-title">
+      Hello, {{ user.profile.full_name if user.profile else user.email.split('@')[0] }} 👋
+    </h1>
+    <p class="welcome-subtitle">
+      {{ user.profile.department if user.profile else 'Student Portal' }} • {{ user.profile.academic_year if user.profile else '' }}
+    </p>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="tabs-nav">
+    <button class="tab-btn active" data-tab="overview-tab">
+      <span>📊</span> Overview & Mood Tracker
+    </button>
+    <button class="tab-btn" data-tab="appointments-tab">
+      <span>🤝</span> Counselor Appointments
+    </button>
+  </div>
+</div>
+
+<!-- Tab 1: Overview & Mood Tracker -->
+<div id="overview-tab" class="tab-content active">
+  <!-- Stats KPI Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon green">🌱</div>
+      <div>
+        <div class="stat-val" id="stat-total-logs">0</div>
+        <div class="stat-label">Check-Ins Logged</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue">✨</div>
+      <div>
+        <div class="stat-val" id="stat-avg-mood">--</div>
+        <div class="stat-label">7-Day Avg Mood</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon amber">📚</div>
+      <div>
+        <div class="stat-val" id="stat-avg-stress">--</div>
+        <div class="stat-label">Academic Stress Index</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">🌙</div>
+      <div>
+        <div class="stat-val" id="stat-avg-sleep">--</div>
+        <div class="stat-label">Avg Sleep Duration</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3col">
+    <!-- Left Column: Daily Mood Tracker & History -->
+    <div>
+      <!-- 1. Interactive Daily Mood Tracker Card -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">🌱 Daily Emotional Check-In</h2>
+            <p class="card-subtitle">Take 30 seconds to reflect on your physical and mental state today.</p>
+          </div>
+          <span class="badge badge-info">Instant DB Sync</span>
+        </div>
+
+        <form id="mood-log-form">
+          <label class="form-label">How are you feeling overall right now?</label>
+          <div class="mood-selector">
+            <button type="button" class="mood-btn" data-score="1">
+              <span class="mood-emoji">😫</span>
+              <span class="mood-text">Severe Distress</span>
+            </button>
+            <button type="button" class="mood-btn" data-score="2">
+              <span class="mood-emoji">😔</span>
+              <span class="mood-text">Down / Anxious</span>
+            </button>
+            <button type="button" class="mood-btn selected" data-score="3">
+              <span class="mood-emoji">😐</span>
+              <span class="mood-text">Okay / Neutral</span>
+            </button>
+            <button type="button" class="mood-btn" data-score="4">
+              <span class="mood-emoji">😊</span>
+              <span class="mood-text">Good / Peaceful</span>
+            </button>
+            <button type="button" class="mood-btn" data-score="5">
+              <span class="mood-emoji">✨</span>
+              <span class="mood-text">Thriving / Great</span>
+            </button>
+          </div>
+
+          <div class="grid-2col" style="margin-bottom: 16px; gap: 18px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="stress-slider">
+                Academic Stress Level (1 - 10)
+              </label>
+              <div class="range-container">
+                <input type="range" id="stress-slider" class="range-slider" min="1" max="10" value="5">
+                <span class="range-value-pill" id="stress-val-display">5</span>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="sleep-input">Sleep Duration (Hours)</label>
+              <input type="number" id="sleep-input" class="form-input" min="0" max="24" step="0.5" value="7.0">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Emotion & State Tags (Select all that resonate)</label>
+            <div class="tags-cloud">
+              <span class="tag-pill" data-tag="Calm">Calm</span>
+              <span class="tag-pill" data-tag="Focused">Focused</span>
+              <span class="tag-pill" data-tag="Motivated">Motivated</span>
+              <span class="tag-pill" data-tag="Grateful">Grateful</span>
+              <span class="tag-pill" data-tag="Anxious">Anxious</span>
+              <span class="tag-pill" data-tag="Overwhelmed">Overwhelmed</span>
+              <span class="tag-pill" data-tag="Exhausted">Exhausted</span>
+              <span class="tag-pill" data-tag="Lonely">Lonely</span>
+              <span class="tag-pill" data-tag="Restless">Restless</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="mood-notes">Personal Wellness Notes (Private Journal)</label>
+            <textarea id="mood-notes" class="form-textarea" placeholder="Reflect on today's classes, deadlines, sleep, or what gave you energy..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+            Save Daily Check-In
+          </button>
+        </form>
+      </div>
+
+      <!-- 2. Personal Trend Visualization Chart -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header">
+          <h2 class="card-title">📈 Your 7-Day Wellness Trajectory</h2>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Mood vs Academic Stress</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="studentMoodChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 3. Mood Check-In History -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">🗓️ Recent Check-In History</h2>
+        </div>
+        <div class="logs-list" id="recent-mood-logs-list">
+          <div style="text-align: center; padding: 24px; color: var(--text-muted);">
+            Loading your wellness records...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Personalized Hub & Quick Clinical Links -->
+    <div>
+      <!-- Personalized Recommendations Box -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header">
+          <h2 class="card-title">🌿 Personalized Wellness Hub</h2>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+          Dynamic recommendations generated from your latest mood check-ins and assessments.
+        </p>
+        <div class="recommendations-box" id="personalized-recommendations-list">
+          <div style="text-align: center; padding: 18px; color: var(--text-muted);">
+            Analyzing your well-being profile...
+          </div>
+        </div>
+      </div>
+
+      <!-- Clinical Self-Assessments Quick Card -->
+      <div class="card" style="margin-bottom: 24px; background: linear-gradient(135deg, #ffffff, var(--surface-alt));">
+        <div class="card-header">
+          <h2 class="card-title">📋 Clinical Surveys</h2>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+          Evaluate symptoms of anxiety, stress, or academic burnout using standardized clinical scales.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <a href="{{ url_for('assessment_page') }}" class="btn btn-primary" style="justify-content: space-between;">
+            <span>Take GAD-7 Anxiety Scale</span>
+            <span>→</span>
+          </a>
+          <a href="{{ url_for('assessment_page') }}#pss" class="btn btn-outline" style="justify-content: space-between;">
+            <span>Perceived Stress Scale (PSS)</span>
+            <span>→</span>
+          </a>
+          <a href="{{ url_for('assessment_page') }}#burnout" class="btn btn-outline" style="justify-content: space-between;">
+            <span>Academic Burnout Index</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Relaxation Tools Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">🧘 Instant Grounding</h2>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+          Feeling anxious or unable to sleep? Reset your nervous system right now.
+        </p>
+        <a href="{{ url_for('wellness_hub') }}" class="btn btn-secondary" style="width: 100%;">
+          Launch 4-7-8 Breathing Circle
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 2: Counselor Appointments & Requests -->
+<div id="appointments-tab" class="tab-content">
+  <div class="grid-2col">
+    <!-- Appointment Request Form -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">🤝 Request a Counseling Session</h2>
+        <span class="badge badge-success">Confidential</span>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 18px;">
+        Campus counselors are here to listen and help you navigate academic pressure, personal anxiety, or life challenges.
+      </p>
+
+      <form id="appointment-request-form">
+        <div class="grid-2col" style="margin-bottom: 0; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="app-date">Preferred Date *</label>
+            <input type="date" id="app-date" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="app-time">Preferred Time Window *</label>
+            <select id="app-time" class="form-select" required>
+              <option value="">Select Time Slot</option>
+              <option value="09:00 AM - 10:00 AM">09:00 AM - 10:00 AM</option>
+              <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+              <option value="11:00 AM - 12:00 PM">11:00 AM - 12:00 PM</option>
+              <option value="01:00 PM - 02:00 PM">01:00 PM - 02:00 PM</option>
+              <option value="02:00 PM - 03:00 PM">02:00 PM - 03:00 PM</option>
+              <option value="03:00 PM - 04:00 PM">03:00 PM - 04:00 PM</option>
+              <option value="04:00 PM - 05:00 PM">04:00 PM - 05:00 PM</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2col" style="margin-bottom: 0; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="app-category">Primary Concern Category *</label>
+            <select id="app-category" class="form-select" required>
+              <option value="Academic Stress & Burnout">Academic Stress & Burnout</option>
+              <option value="Anxiety & Panic Symptoms">Anxiety & Panic Symptoms</option>
+              <option value="Depression & Low Energy">Depression & Low Energy</option>
+              <option value="Sleep Difficulties & Insomnia">Sleep Difficulties & Insomnia</option>
+              <option value="Relationship & Social Challenges">Relationship & Social Challenges</option>
+              <option value="General Wellness Check-in">General Wellness Check-in</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="app-urgency">Support Urgency Level *</label>
+            <select id="app-urgency" class="form-select" required>
+              <option value="Standard">Standard (Within 3 - 5 Days)</option>
+              <option value="Priority">Priority (Within 24 - 48 Hours)</option>
+              <option value="Immediate Support">Immediate Support (Urgent / Same-Day)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="app-notes">Brief Context / What's on your mind? (Confidential)</label>
+          <textarea id="app-notes" class="form-textarea" placeholder="Share anything that will help your counselor prepare for your session..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+          Request Confidential Session
+        </button>
+      </form>
+    </div>
+
+    <!-- Appointment History & Status -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">🗓️ Your Requested Sessions</h2>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+        Track the status of your appointments, meeting location, and counselor feedback.
+      </p>
+      <div id="student-appointments-list">
+        <div style="text-align: center; padding: 24px; color: var(--text-muted);">
+          Loading your appointments...
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/student.js') }}"></script>
+{% endblock %}

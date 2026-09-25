@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Student Portal Access - Serene Minds{% endblock %}
+
+{% block content %}
+<div style="max-width: 520px; margin: 40px auto 60px;">
+  <!-- Header Card -->
+  <div style="text-align: center; margin-bottom: 24px;">
+    <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--text-main);">Student Wellness Portal</h1>
+    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px;">
+      Log in or create your student wellness account to begin tracking your well-being.
+    </p>
+  </div>
+
+  <div class="card" style="padding: 30px;">
+    <!-- 1. Student Login Panel -->
+    <div id="login-panel">
+      <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 18px; color: var(--text-main);">
+        Sign In to Your Account
+      </h2>
+
+      <div class="alert alert-danger" id="login-error-alert" style="display: none;"></div>
+
+      <form id="student-login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Student Email Address</label>
+          <input type="email" id="login-email" class="form-input" placeholder="e.g. elena.vance@sereneminds.edu" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">
+          Sign In to Wellness Dashboard
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-subtle); font-size: 0.92rem; color: var(--text-muted);">
+        Don't have an account yet? 
+        <a href="#" id="toggle-to-register" style="color: var(--primary); font-weight: 600; text-decoration: none;">Register here</a>
+      </div>
+    </div>
+
+    <!-- 2. Student Registration Panel (Hidden by default) -->
+    <div id="register-panel" style="display: none;">
+      <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 18px; color: var(--text-main);">
+        Create Student Profile
+      </h2>
+
+      <div class="alert alert-danger" id="register-error-alert" style="display: none;"></div>
+
+      <form id="student-register-form">
+        <div class="form-group">
+          <label class="form-label" for="reg-name">Full Name *</label>
+          <input type="text" id="reg-name" class="form-input" placeholder="e.g. Jordan Miller" required>
+        </div>
+
+        <div class="grid-2col" style="margin-bottom: 0; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="reg-studentid">Student ID Number *</label>
+            <input type="text" id="reg-studentid" class="form-input" placeholder="SM-2026-XXXX" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Institutional Email *</label>
+            <input type="email" id="reg-email" class="form-input" placeholder="name@sereneminds.edu" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="grid-2col" style="margin-bottom: 0; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="reg-department">Academic Department *</label>
+            <select id="reg-department" class="form-select" required>
+              <option value="">Select Department</option>
+              <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+              <option value="Biomedical Sciences">Biomedical Sciences</option>
+              <option value="Psychology & Cognitive Science">Psychology & Cognitive Science</option>
+              <option value="Business & Economics">Business & Economics</option>
+              <option value="Humanities & Arts">Humanities & Arts</option>
+              <option value="Nursing & Health Studies">Nursing & Health Studies</option>
+              <option value="General Studies">General Studies</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-year">Academic Year *</label>
+            <select id="reg-year" class="form-select" required>
+              <option value="Freshman (1st Year)">Freshman (1st Year)</option>
+              <option value="Sophomore (2nd Year)">Sophomore (2nd Year)</option>
+              <option value="Junior (3rd Year)">Junior (3rd Year)</option>
+              <option value="Senior (4th Year)">Senior (4th Year)</option>
+              <option value="Graduate / Post-Grad">Graduate / Post-Grad</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2col" style="margin-bottom: 0; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="reg-phone">Phone Number (Optional)</label>
+            <input type="tel" id="reg-phone" class="form-input" placeholder="+1 (555) 000-0000">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-emergency">Emergency Contact (Optional)</label>
+            <input type="text" id="reg-emergency" class="form-input" placeholder="Parent/Guardian (Phone)">
+          </div>
+        </div>
+
+        <div class="grid-2col" style="margin-bottom: 0; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="reg-password">Password (min 6 chars) *</label>
+            <input type="password" id="reg-password" class="form-input" placeholder="••••••••" required autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-confirm-password">Confirm Password *</label>
+            <input type="password" id="reg-confirm-password" class="form-input" placeholder="••••••••" required autocomplete="new-password">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+          Register Student Account
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-subtle); font-size: 0.92rem; color: var(--text-muted);">
+        Already have an account? 
+        <a href="#" id="toggle-to-login" style="color: var(--primary); font-weight: 600; text-decoration: none;">Sign In</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

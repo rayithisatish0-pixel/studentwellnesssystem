@@ -1,0 +1,82 @@
+/*
+Serene Minds - Soft Animations & Transitions
+Calming mindfulness effects, rhythmic breathing expansion, and smooth card reveals
+*/
+
+/* Breathing Visual Cycle Animations */
+.breathing-inhale {
+  transform: scale(1.6) !important;
+  box-shadow: 0 0 60px rgba(82, 183, 136, 0.7) !important;
+  filter: brightness(1.15);
+}
+
+.breathing-hold {
+  transform: scale(1.6) !important;
+  box-shadow: 0 0 70px rgba(13, 148, 136, 0.8) !important;
+}
+
+.breathing-exhale {
+  transform: scale(0.9) !important;
+  box-shadow: 0 0 25px rgba(45, 106, 79, 0.3) !important;
+  filter: brightness(0.95);
+}
+
+/* Shimmer / Skeleton loader effect */
+.skeleton {
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Subtle floating animation for mindfulness elements */
+.float-subtle {
+  animation: floatMotion 6s ease-in-out infinite;
+}
+
+@keyframes floatMotion {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Interactive Sound Wave Animation */
+.sound-wave-bars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 24px;
+}
+
+.sound-bar {
+  width: 4px;
+  background-color: var(--primary);
+  border-radius: 2px;
+  height: 6px;
+  transition: height 0.2s ease;
+}
+
+.sound-playing .sound-bar:nth-child(1) { animation: wave 1.2s ease-in-out infinite alternate; }
+.sound-playing .sound-bar:nth-child(2) { animation: wave 1.0s ease-in-out 0.2s infinite alternate; }
+.sound-playing .sound-bar:nth-child(3) { animation: wave 1.4s ease-in-out 0.4s infinite alternate; }
+.sound-playing .sound-bar:nth-child(4) { animation: wave 0.9s ease-in-out 0.1s infinite alternate; }
+
+@keyframes wave {
+  0% { height: 4px; }
+  100% { height: 22px; }
+}
+
+/* Fade in for dynamic table rows */
+.fade-row {
+  animation: fadeRowIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeRowIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

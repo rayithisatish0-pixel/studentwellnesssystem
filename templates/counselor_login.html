@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Counselor & Clinical Administration Portal - Serene Minds{% endblock %}
+
+{% block content %}
+<div style="max-width: 480px; margin: 40px auto 60px;">
+  <!-- Header Banner -->
+  <div style="text-align: center; margin-bottom: 24px;">
+    <div class="brand-icon" style="margin: 0 auto 12px; width: 44px; height: 44px; font-size: 1.4rem;">
+      🛡️
+    </div>
+    <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--text-main);">Counselor Portal Access</h1>
+    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px;">
+      Authorized clinical staff & student counseling team authentication.
+    </p>
+  </div>
+
+  <div class="card" style="padding: 32px; border-top: 4px solid var(--primary);">
+    <div class="alert alert-info" style="font-size: 0.86rem; margin-bottom: 20px;">
+      🔒 <strong>Restricted Clinical Access:</strong> This portal is monitored and restricted to verified campus mental health counselors. Enter your counselor institutional credentials below.
+    </div>
+
+    <div class="alert alert-danger" id="counselor-error-alert" style="display: none;"></div>
+
+    <form id="counselor-login-form">
+      <div class="form-group">
+        <label class="form-label" for="counselor-email">Counselor Email</label>
+        <input 
+          type="email" 
+          id="counselor-email" 
+          class="form-input" 
+          placeholder="counselor@sereneminds.edu" 
+          required 
+          autocomplete="username"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="counselor-password">Secure Password</label>
+        <input 
+          type="password" 
+          id="counselor-password" 
+          class="form-input" 
+          placeholder="••••••••••••" 
+          required 
+          autocomplete="current-password"
+        >
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+        Authorize & Enter Counselor Portal
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-subtle); font-size: 0.85rem; color: var(--text-muted);">
+      Campus Counseling Center • Department of Student Affairs<br>
+      <small>For technical credentials recovery, contact IT Helpdesk (ext. 4357)</small>
+    </div>
+  </div>
+</div>
+{% endblock %}

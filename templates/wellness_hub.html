@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Mindfulness & Self-Care Hub - Serene Minds{% endblock %}
+
+{% block content %}
+<div style="max-width: 980px; margin: 0 auto 50px;">
+  <!-- Header -->
+  <div style="margin-bottom: 28px;">
+    <a href="{{ url_for('student_dashboard') }}" style="color: var(--primary); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+      ← Back to Dashboard
+    </a>
+    <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-main);">Personalized Mindfulness Hub</h1>
+    <p style="color: var(--text-muted); font-size: 1rem; margin-top: 6px;">
+      Evidence-based somatic and mental grounding tools to reduce cortisol, quiet racing thoughts, and recharge.
+    </p>
+  </div>
+
+  <!-- 1. The 4-7-8 Interactive Breathing Guide -->
+  <div class="card" id="breathing" style="margin-bottom: 32px; background: linear-gradient(180deg, #ffffff, var(--surface-alt));">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">🌬️ 4-7-8 Deep Grounding Breathwork</h2>
+        <p class="card-subtitle">Developed by Dr. Andrew Weil to stimulate parasympathetic vagus nerve calming.</p>
+      </div>
+      <span class="badge badge-success">Somatic Reset</span>
+    </div>
+
+    <div class="breathing-box">
+      <div class="breath-circle-wrap">
+        <div class="breath-circle-outer"></div>
+        <div class="breath-circle" id="breathing-circle-elem">
+          <div class="breath-phase-text" id="breathing-phase-elem">READY</div>
+          <div class="breath-timer-count" id="breathing-timer-elem">4</div>
+        </div>
+      </div>
+
+      <div class="breath-instruction" id="breathing-instruction-elem">
+        Press Begin to start the 4-7-8 rhythmic breathing cycle.
+      </div>
+      <div class="breath-subtext">
+        Inhale quietly through your nose for 4s, hold gently for 7s, and exhale audibly through your mouth for 8s.
+      </div>
+
+      <button id="start-breathing-btn" class="btn btn-primary btn-lg">
+        Begin 4-7-8 Breathing
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. Ambient Soundscape Generator (Web Audio API) -->
+  <div class="card" id="soundscapes" style="margin-bottom: 32px;">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">🎧 Calming Ambient Soundscapes</h2>
+        <p class="card-subtitle">Synthesized organic white noise to mask distracting library and dorm background noise.</p>
+      </div>
+      <span class="badge badge-info">Zero Lag • Offline Capable</span>
+    </div>
+
+    <div class="soundscape-grid">
+      <div class="soundscape-card">
+        <div class="sound-icon">🌧️</div>
+        <div class="sound-title">Gentle Rain Shower</div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          Soft rainfall frequencies to soothe an overstimulated mind during study breaks.
+        </p>
+        <button id="play-rain-btn" class="btn btn-sm btn-outline-primary" style="width: 100%;">
+          Play Gentle Rain
+        </button>
+      </div>
+
+      <div class="soundscape-card">
+        <div class="sound-icon">🌊</div>
+        <div class="sound-title">Ocean Surf Waves</div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          Rhythmic tidal resonance to slow your pulse and prepare for restorative sleep.
+        </p>
+        <button id="play-waves-btn" class="btn btn-sm btn-outline-primary" style="width: 100%;">
+          Play Ocean Waves
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Evidence-Based Coping Strategies from Database -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">📚 Student Self-Care Library</h2>
+      <span class="badge badge-neutral">Curated by Clinical Staff</span>
+    </div>
+    
+    <div id="wellness-tips-feed" style="display: flex; flex-direction: column; gap: 16px; margin-top: 10px;">
+      <!-- Populated via API or seed data -->
+      <div style="padding: 16px; background: var(--surface-alt); border-radius: var(--radius-sm); border-left: 4px solid var(--primary);">
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 6px;">The 50/10 Focus & Sensory Rest Protocol</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+          Study uninterrupted for 50 minutes with all phone notifications silenced. Follow with 10 minutes of complete sensory rest: walk, drink water, or stretch without looking at any screen. This preserves prefrontal cortex energy and prevents cognitive burnout.
+        </p>
+      </div>
+
+      <div style="padding: 16px; background: var(--surface-alt); border-radius: var(--radius-sm); border-left: 4px solid var(--secondary);">
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 6px;">Cognitive Defusion for Catastrophic Exam Thoughts</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+          When an anxious thought arises like "I'm going to fail and ruin my future," silently alter the phrasing: "I notice that I am having the thought that I might fail." Separating your intrinsic self from transient cognitions instantly lowers acute anxiety.
+        </p>
+      </div>
+
+      <div style="padding: 16px; background: var(--surface-alt); border-radius: var(--radius-sm); border-left: 4px solid var(--accent-warm);">
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 6px;">Circadian Sleep Hygiene for Memory Consolidation</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+          Long-term memory synthesis occurs during deep slow-wave and REM sleep cycles. Maintain a consistent bedtime window within 30 minutes every day and avoid bright screen exposure 45 minutes before sleep to trigger natural melatonin production.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/student.js') }}"></script>
+{% endblock %}
